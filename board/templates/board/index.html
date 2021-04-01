@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Регистрация
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+<div class="form-group pmd-textfield pmd-textfield-floating-label">
+    <label class="control-label" for="timepicker">Select Time</label>
+    <input type="text" class="form-control" id="timepicker">
+</div>
+
+{% block content %}
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="rounded-top col-6 p-4 bg-primary text-white">
+            <div class="row">
+
+                <div class="col-auto me-auto" style="font-size: 40px;">Reminders</div>
+
+                <div class="col-auto">
+
+                    <button type="button" id='buttonTest' class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            style="border-radius: 35px; width: 70px; height: 70px; background-color: #43ba85;"><h1>
+                        +</h1></button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
