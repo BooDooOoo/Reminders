@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis
+    volumes:
+    - redis_reminders_data:/data
+
+
+  django:
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - reminders_db:/usr/src/Reminders/DB_sqlite3
+    ports:
+    - '8000:8000'
+    env_file:
+      - email-variables.env
+    depends_on:
+      - redis
+
+  celery_worker:
+    build: .
+    command: celery -A Reminders worker -l info
+    volumes:
+      - reminders_db:/usr/src/Reminders/DB_sqlite3
+    env_file:
+      - email-variables.env
+    depends_on:
+      - redis
+
+  celery_beat:
+    build: .
+    command: celery -A Reminders beat
+    env_file:
+      - email-variables.env
+    depends_on:
+      - celery_worker
+      - redis
+
+
+volumes:
+  redis_reminders_data:
+  reminders_db:
