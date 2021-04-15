@@ -1,35 +1,311 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
-    Регистрация
 {% endblock %}
 
-{% block scripts %}
+{% block styles %}
+    <style type="text/css">
+        .formDatepicker, .formTimepicker {
+            color: #43ba85;
+            background-color: white !important;
+        }
+    </style>
 {% endblock %}
 
-<div class="form-group pmd-textfield pmd-textfield-floating-label">
-    <label class="control-label" for="timepicker">Select Time</label>
-    <input type="text" class="form-control" id="timepicker">
-</div>
 
 {% block content %}
     <div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="rounded-top col-6 p-4 bg-primary text-white">
-            <div class="row">
+        <div class="row justify-content-center">
+            <div class="rounded-top col-6 p-4 bg-primary text-white">
+                <div class="row">
 
-                <div class="col-auto me-auto" style="font-size: 40px;">Reminders</div>
+                    <div class="col-auto me-auto" style="font-size: 40px;">Reminders</div>
 
-                <div class="col-auto">
+                    <div class="col-auto">
 
-                    <button type="button" id='buttonTest' class="btn btn-success" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            style="border-radius: 35px; width: 70px; height: 70px; background-color: #43ba85;"><h1>
-                        +</h1></button>
+                        <button type="button openModal" id='buttonModal' class="btn btn-success" data-bs-toggle="modal"
+                                data-bs-target="#mainModal" modalevent='create'
+                                style="border-radius: 35px; width: 70px; height: 70px; background-color: #43ba85;"><h1>
+                            +</h1></button>
 
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="row justify-content-center" id="loading">
+            <div class="col-6 p-4">
+                <div class="row justify-content-center fs-2">Loading...</div>
+            </div>
+        </div>
+
+        {% for item in reminders %}
+
+            <div class="visually-hidden row justify-content-center rowReminder" style="margin-top: 7px;">
+                <div class="col-6 p-4 border">
+                    <div class="row align-items-center">
+
+                        <div class="col-auto me-auto">
+                            <div class="row">
+
+                                <!-- Блок текста напоминания -->
+
+                                <div class="col">
+                                    <p class="textReminder"><strong>{{ item.title }}</strong></p>
+                                </div>
+                                <div class="w-100"></div>
+
+                                <div class="col">
+                                    <div class="row justify-content-start g-0">
+
+                                        <!-- Блок вывода даты напоминания -->
+
+                                        <div class="col-6 col-md-5">
+                                            <div class="row g-0">
+                                                <div class="col-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor" class="bi bi-calendar-event"
+                                                         viewBox="0 0 16 16">
+                                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="col-10 px-1">
+                                                    <p class="text-nowrap dateReminder">{{ item.date|date:'M d, Y' }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Блок вывода времени напоминания -->
+                                        {% if item.time != None %}
+                                        <div class="col-6 col-md-5">
+                                            <div class="row g-0">
+                                                <div class="col-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
+                                                        <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+                                                        <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p class="timeReminder">{{ item.time|date:'g:i A' }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка вызова изменения или удаления напоминания -->
+
+                        <div class="col-auto">
+                            <div class="dropdown">
+                                <button class="btn" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+
+                                    <!-- Кнопка изменения напоминания -->
+
+                                    <li><a class="dropdown-item openModal" id="{{ item.id }}" modalevent="update"
+                                           href="#" data-bs-toggle="modal"
+                                           data-bs-target="#mainModal">Edit</a></li>
+
+                                    <!-- Кнопка удаления напоминания -->
+
+                                    <li><a class="dropdown-item" href="delete/{{ item.id }}">Remove</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% empty %}
+
+            <!-- Вывод сообщения при отсутствии напоминаний -->
+
+            <div class="row justify-content-center">
+                <div class="col-6 p-4 text-secondary ">
+                    <div class="row justify-content-center fs-2">You have no reminders yet!</div>
+                    <div class="row justify-content-center fs-2">It's time to</div>
+                    <div class="row justify-content-center fs-2 fst-italic">add one</div>
+                </div>
+            </div>
+
+        {% endfor %}
     </div>
-</div>
+
+    <!-- Основное модальное окно с формой ввода данных напоминания -->
+
+    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <form id="ReminderForm" action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
+                    {{ form.id }}
+
+                    <!-- Ввод текста напоминания -->
+
+                    <div class="modal-body">
+                        <label for="textRemindersInput" class="form-label">Reminder text</label>
+                        {{ form.title }}
+                    </div>
+
+                    <!-- Нижняя часть модального окна с полями ввода даты и времени и кнопкой добавления напоминания  -->
+
+                    <div class="modal-footer" style="padding-left: 0; padding-right: 0;">
+                        <div class="container-fluid">
+                            <div class="row justify-content-between align-items-center">
+
+                                <div class="col">
+                                    <div class="row justify-content-start gx-2">
+
+                                        <!-- Поле ввода даты напоминания -->
+
+                                        <div class="col col-md-5">
+                                            <div class="input-group">
+                        <span class="input-group-text"
+                              style="background-color: white; border:none; padding-right: 0; color: #43ba85">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                               class="bi bi-calendar-event" viewBox="0 0 16 16">
+                            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                          </svg>
+                        </span>
+                                                {{ form.date }}
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Поле ввода времени напоминания -->
+
+                                        <div class="col col-md-4">
+                                            <div class="input-group">
+                        <span class="input-group-text"
+                              style="background-color: white; border:none; padding-right: 0; color: #43ba85">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                               class="bi bi-alarm" viewBox="0 0 16 16">
+                            <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+                            <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
+                          </svg>
+                        </span>
+                                                {{ form.time }}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Кнопка добавления или сохранения напоминания -->
+
+                                <div class="col-auto">
+                                    <button type="submit" class="form-control btn" type="submit"
+                                            style="color: #43ba85; font-size: 19px">ADD
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="{% static 'board/mdtimepicker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'board/duDatepicker.js' %}"></script>
+
+    <script type="text/javascript">
+
+        window.onload = function () {
+
+            document.querySelector('#loading').setAttribute('class', 'visually-hidden row justify-content-center');
+            let rowReminder = document.querySelectorAll('.rowReminder')
+
+            for (let elem of rowReminder){
+                elem.setAttribute('class', 'row justify-content-center rowReminder');
+
+
+            }
+
+            // Назначение кнопок на открытие главного модального окна
+            mainModal = document.getElementById('mainModal')
+            var modal = new bootstrap.Modal(mainModal)
+            buttonModal = document.querySelectorAll('.openModal')
+            buttonModal.onclick = function () {
+                modal.show()
+            }
+
+            // Инициализация формы выбора времени
+            $('#timepicker').mdtimepicker();
+
+            // Инициализация формы выбора даты
+            duDatepicker('#datepicker', {
+                theme: 'blue',
+                format: 'mmm d, yyyy',
+                events: {
+                    dateChanged: function (data) {
+                        document.getElementById('datepicker').value = data.date
+                    }
+                },
+            })
+
+            // Функция определения данных, которые попадут в главное модальное окно
+            mainModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var modalevent = button.getAttribute('modalevent');
+
+                var form = document.querySelector('#ReminderForm')
+
+                // Данные модального окна при создании нового напоминания
+                if (modalevent === 'create') {
+                    form.querySelector('#id_id').value = '';
+                    form.querySelector('#id_title').value = '';
+                    form.querySelector('#datepicker').value = 'Set Date';
+                    form.querySelector('#timepicker').value = 'Set Time';
+                    form.querySelector('button').innerText = 'ADD';
+
+                // Данные модального окна при редактировании напоминания
+                } else if (modalevent === 'update') {
+                    var blockReminder = button.closest('div.row');
+                    form.querySelector('#id_id').value = button.getAttribute('id');
+                    form.querySelector('#id_title').value = blockReminder.querySelector('.textReminder').innerText;
+                    form.querySelector('#datepicker').value = blockReminder.querySelector('.dateReminder').innerText;
+
+                    if (blockReminder.querySelector('.timeReminder') !== null){
+                        form.querySelector('#timepicker').value = blockReminder.querySelector('.timeReminder').innerText;
+                    } else {
+                        form.querySelector('#timepicker').value = 'Set Time';
+                    }
+
+                    form.querySelector('button').innerText = 'SAVE';
+                }
+            })
+
+            // Указываем пустое поле время, если пользователь не выбирал время
+            var buttonSubmit = document.querySelector('button[type=submit]');
+            buttonSubmit.onclick = function () {
+                timeField = document.querySelector('#timepicker');
+                if (timeField.value === 'Set Time'){
+                    timeField.value = '';
+                }
+            }
+
+        }
+
+    </script>
 {% endblock %}
