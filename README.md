@@ -1,6 +1,7 @@
 # Reminders
  Web-application to create short reminders
- 
+
+https://user-images.githubusercontent.com/42356579/114954114-7d3c0080-9e62-11eb-91cf-e044b003fb09.mp4
  
 ## Installing
 
