@@ -33,7 +33,8 @@ docker-compose up
 
 * [Django](https://docs.djangoproject.com/en/3.2/) - The web framework used
 * [Celery](https://docs.celeryproject.org/en/stable/) - Task manager
-* [Redis](https://rometools.github.io/rome/) - Task broker
+* [Redis](https://redis.io/) - Task broker
+* [Docker](https://www.docker.com/) - Deliver software in packages
 
 ## Preview
 
