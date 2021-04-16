@@ -1,7 +1,12 @@
 # Reminders
  Web-application to create short reminders
 
-https://user-images.githubusercontent.com/42356579/114954114-7d3c0080-9e62-11eb-91cf-e044b003fb09.mp4
+## Description
+
+User:
+* must register and login
+* can create, update and delete reminder
+* will receive email with reminder in time
  
 ## Installing
 
@@ -29,3 +34,7 @@ docker-compose up
 * [Django](https://docs.djangoproject.com/en/3.2/) - The web framework used
 * [Celery](https://docs.celeryproject.org/en/stable/) - Task manager
 * [Redis](https://rometools.github.io/rome/) - Task broker
+
+## Preview
+
+https://user-images.githubusercontent.com/42356579/114954114-7d3c0080-9e62-11eb-91cf-e044b003fb09.mp4
